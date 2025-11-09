@@ -1,0 +1,21 @@
+# Proxy List Example
+# Add one proxy per line in the format:
+# host:port
+# or with authentication:
+# username:password@host:port
+
+# Example proxies (these won't work - replace with your own):
+# proxy1.example.com:8080
+# proxy2.example.com:8080
+# user:pass@proxy3.example.com:8080
+
+# Free proxy sources (use at your own risk):
+# - https://www.webshare.io/ (10 free proxies)
+# - https://free-proxy-list.net/
+# - https://www.sslproxies.org/
+
+# Recommended paid proxy services:
+# - Webshare: https://www.webshare.io/
+# - Bright Data: https://brightdata.com/
+# - SmartProxy: https://smartproxy.com/
+# - Oxylabs: https://oxylabs.io/
