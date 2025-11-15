@@ -400,6 +400,16 @@ You should see checks like:
 
 ## PART 7: RUN YOUR FIRST SEARCH (5 minutes)
 
+### Step 7.0: Estimate Costs First (OPTIONAL)
+
+**Before your first search**, you can estimate costs:
+
+```bash
+python cost_calculator.py
+```
+
+Follow the prompts - it will tell you exactly what your search will cost!
+
 ### Step 7.1: Run the App
 
 **What this does:** Searches Google and analyzes websites!
