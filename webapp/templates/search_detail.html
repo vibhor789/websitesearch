@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-8 flex justify-between items-start">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-900">Search Results</h1>
+            <p class="text-gray-600 mt-2">{{ search.query }}</p>
+        </div>
+        <div class="flex space-x-4">
+            <a href="{{ url_for('export_search', search_id=search.id) }}"
+               class="bg-green-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-green-700">
+                📥 Export CSV
+            </a>
+            <a href="{{ url_for('new_search') }}"
+               class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700">
+                🔍 New Search
+            </a>
+        </div>
+    </div>
+
+    <!-- Search Info -->
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+        <div class="bg-white p-4 rounded-lg card-shadow">
+            <div class="text-sm text-gray-500">Status</div>
+            <div class="text-lg font-bold
+                {% if search.status == 'completed' %}text-green-600
+                {% elif search.status == 'running' %}text-yellow-600
+                {% elif search.status == 'failed' %}text-red-600
+                {% else %}text-gray-600{% endif %}">
+                {{ search.status|capitalize }}
+            </div>
+        </div>
+        <div class="bg-white p-4 rounded-lg card-shadow">
+            <div class="text-sm text-gray-500">Sites Analyzed</div>
+            <div class="text-lg font-bold">{{ search.total_sites }}</div>
+        </div>
+        <div class="bg-white p-4 rounded-lg card-shadow">
+            <div class="text-sm text-gray-500">Leads Found</div>
+            <div class="text-lg font-bold text-green-600">{{ search.leads_found }}</div>
+        </div>
+        <div class="bg-white p-4 rounded-lg card-shadow">
+            <div class="text-sm text-gray-500">Cost</div>
+            <div class="text-lg font-bold">${{ "%.2f"|format(search.actual_cost) }}</div>
+        </div>
+        <div class="bg-white p-4 rounded-lg card-shadow">
+            <div class="text-sm text-gray-500">AI Provider</div>
+            <div class="text-lg font-bold">{{ search.ai_provider|capitalize }}</div>
+        </div>
+    </div>
+
+    <!-- Leads Table -->
+    <div class="bg-white rounded-xl card-shadow">
+        <div class="px-6 py-4 border-b">
+            <h2 class="text-xl font-bold">Qualified Leads ({{ leads|length }})</h2>
+        </div>
+
+        {% if leads %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Business</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Missing Features</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recommendation</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for lead in leads %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4">
+                            <div class="font-medium text-gray-900">{{ lead.domain }}</div>
+                            <div class="text-sm text-gray-500">{{ lead.business_type }}</div>
+                            <a href="{{ lead.url }}" target="_blank" class="text-xs text-indigo-600 hover:underline">
+                                Visit Site ↗
+                            </a>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex flex-wrap gap-2">
+                                {% if not lead.has_chatbox %}
+                                <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded">No Chatbox</span>
+                                {% endif %}
+                                {% if not lead.has_whatsapp %}
+                                <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">No WhatsApp</span>
+                                {% endif %}
+                                {% if not lead.has_call_button %}
+                                <span class="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded">No Call Button</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-3 py-1 inline-flex text-sm font-semibold rounded-full
+                                {% if lead.priority == 'High' %}bg-red-100 text-red-800
+                                {% elif lead.priority == 'Medium' %}bg-yellow-100 text-yellow-800
+                                {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                {{ lead.priority }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 max-w-md">
+                            <div class="text-sm text-gray-900">{{ lead.recommendations }}</div>
+                            <div class="text-xs text-gray-500 mt-1">{{ lead.potential_impact }}</div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="p-8 text-center">
+            <div class="text-gray-400 text-5xl mb-4">🔄</div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">
+                {% if search.status == 'pending' %}
+                Search is queued
+                {% elif search.status == 'running' %}
+                Search in progress...
+                {% else %}
+                No leads found
+                {% endif %}
+            </h3>
+            <p class="text-gray-500">
+                {% if search.status == 'pending' %}
+                Your search will start soon. Refresh this page to check progress.
+                {% elif search.status == 'running' %}
+                Analyzing websites. This may take a few minutes.
+                {% else %}
+                All websites in search results already have chat support features.
+                {% endif %}
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

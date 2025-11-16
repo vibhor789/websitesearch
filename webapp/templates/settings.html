@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Settings</h1>
+        <p class="text-gray-600 mt-2">Configure your API keys and default preferences.</p>
+    </div>
+
+    <form method="POST">
+        <!-- API Keys -->
+        <div class="bg-white rounded-xl card-shadow p-8 mb-8">
+            <h2 class="text-xl font-bold mb-6">API Keys</h2>
+
+            <div class="space-y-6">
+                <!-- OpenAI -->
+                <div>
+                    <label for="openai_api_key" class="block text-sm font-medium text-gray-700 mb-2">
+                        OpenAI API Key
+                    </label>
+                    <input type="password" id="openai_api_key" name="openai_api_key"
+                           placeholder="{% if current_user.openai_api_key %}sk-****{% else %}Enter your OpenAI API key{% endif %}"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                    <p class="mt-2 text-sm text-gray-500">
+                        Get your key at <a href="https://platform.openai.com/api-keys" target="_blank" class="text-indigo-600 hover:underline">platform.openai.com/api-keys</a>
+                    </p>
+                    {% if current_user.openai_api_key %}
+                    <p class="mt-1 text-sm text-green-600">✓ Key configured</p>
+                    {% endif %}
+                </div>
+
+                <!-- Anthropic -->
+                <div>
+                    <label for="anthropic_api_key" class="block text-sm font-medium text-gray-700 mb-2">
+                        Anthropic API Key
+                    </label>
+                    <input type="password" id="anthropic_api_key" name="anthropic_api_key"
+                           placeholder="{% if current_user.anthropic_api_key %}sk-ant-****{% else %}Enter your Anthropic API key{% endif %}"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                    <p class="mt-2 text-sm text-gray-500">
+                        Get your key at <a href="https://console.anthropic.com/" target="_blank" class="text-indigo-600 hover:underline">console.anthropic.com</a>
+                    </p>
+                    {% if current_user.anthropic_api_key %}
+                    <p class="mt-1 text-sm text-green-600">✓ Key configured</p>
+                    {% endif %}
+                </div>
+
+                <!-- ScraperAPI -->
+                <div>
+                    <label for="scraper_api_key" class="block text-sm font-medium text-gray-700 mb-2">
+                        ScraperAPI Key (for IP rotation)
+                    </label>
+                    <input type="password" id="scraper_api_key" name="scraper_api_key"
+                           placeholder="{% if current_user.scraper_api_key %}****{% else %}Enter your ScraperAPI key{% endif %}"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                    <p class="mt-2 text-sm text-gray-500">
+                        Get free 5,000 requests/month at <a href="https://www.scraperapi.com/" target="_blank" class="text-indigo-600 hover:underline">scraperapi.com</a>
+                    </p>
+                    {% if current_user.scraper_api_key %}
+                    <p class="mt-1 text-sm text-green-600">✓ Key configured</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Default Preferences -->
+        <div class="bg-white rounded-xl card-shadow p-8 mb-8">
+            <h2 class="text-xl font-bold mb-6">Default Preferences</h2>
+
+            <div class="space-y-6">
+                <!-- Default AI Provider -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Default AI Provider
+                    </label>
+                    <select name="default_ai_provider"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="openai" {% if current_user.default_ai_provider == 'openai' %}selected{% endif %}>
+                            OpenAI GPT-4
+                        </option>
+                        <option value="anthropic" {% if current_user.default_ai_provider == 'anthropic' %}selected{% endif %}>
+                            Anthropic Claude
+                        </option>
+                    </select>
+                </div>
+
+                <!-- Default Screenshots -->
+                <div>
+                    <label class="flex items-center">
+                        <input type="checkbox" name="default_screenshots"
+                               {% if current_user.default_screenshots %}checked{% endif %}
+                               class="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                        <span class="ml-3">
+                            <span class="font-medium text-gray-700">Enable screenshots by default</span>
+                            <p class="text-sm text-gray-500">
+                                More accurate but costs more ($0.01 vs $0.003 per site)
+                            </p>
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Save Button -->
+        <button type="submit"
+                class="w-full bg-indigo-600 text-white py-4 rounded-lg font-semibold text-lg hover:bg-indigo-700 transition">
+            Save Settings
+        </button>
+    </form>
+
+    <!-- Danger Zone -->
+    <div class="mt-12">
+        <h2 class="text-xl font-bold text-red-600 mb-4">Danger Zone</h2>
+        <div class="bg-red-50 border border-red-200 rounded-lg p-6">
+            <h3 class="font-semibold text-red-800 mb-2">Delete Account</h3>
+            <p class="text-sm text-red-600 mb-4">
+                This will permanently delete your account and all search data.
+            </p>
+            <button class="bg-red-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-red-700"
+                    onclick="alert('Contact support to delete your account')">
+                Delete Account
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block title %}Pricing{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-extrabold text-gray-900">Simple, Transparent Pricing</h1>
+        <p class="mt-4 text-xl text-gray-600">Pay only for what you use. No subscriptions or hidden fees.</p>
+    </div>
+
+    <!-- Main Pricing -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        <!-- Starter -->
+        <div class="bg-white rounded-xl card-shadow p-8">
+            <h3 class="text-2xl font-bold mb-4">Starter</h3>
+            <div class="text-4xl font-bold text-gray-900 mb-2">$0.05</div>
+            <div class="text-gray-500 mb-6">per website analyzed</div>
+            <ul class="space-y-3 mb-8">
+                <li class="flex items-center">
+                    <span class="text-green-500 mr-2">✓</span>
+                    AI chatbox detection
+                </li>
+                <li class="flex items-center">
+                    <span class="text-green-500 mr-2">✓</span>
+                    Business analysis
+                </li>
+                <li class="flex items-center">
+                    <span class="text-green-500 mr-2">✓</span>
+                    CSV export
+                </li>
+                <li class="flex items-center">
+                    <span class="text-green-500 mr-2">✓</span>
+                    Basic IP rotation
+                </li>
+            </ul>
+            <a href="{{ url_for('register') }}"
+               class="block w-full bg-gray-100 text-gray-800 py-3 rounded-lg font-semibold text-center hover:bg-gray-200">
+                Get Started
+            </a>
+        </div>
+
+        <!-- Professional -->
+        <div class="bg-indigo-600 rounded-xl p-8 text-white transform scale-105">
+            <div class="bg-indigo-500 text-xs font-bold uppercase px-3 py-1 rounded-full inline-block mb-4">
+                Most Popular
+            </div>
+            <h3 class="text-2xl font-bold mb-4">Professional</h3>
+            <div class="text-4xl font-bold mb-2">$49/mo</div>
+            <div class="opacity-80 mb-6">+ $0.03 per website</div>
+            <ul class="space-y-3 mb-8">
+                <li class="flex items-center">
+                    <span class="text-green-300 mr-2">✓</span>
+                    Everything in Starter
+                </li>
+                <li class="flex items-center">
+                    <span class="text-green-300 mr-2">✓</span>
+                    Screenshot analysis
+                </li>
+                <li class="flex items-center">
+                    <span class="text-green-300 mr-2">✓</span>
+                    Google Sheets export
+                </li>
+                <li class="flex items-center">
+                    <span class="text-green-300 mr-2">✓</span>
+                    Priority support
+                </li>
+                <li class="flex items-center">
+                    <span class="text-green-300 mr-2">✓</span>
+                    API access
+                </li>
+            </ul>
+            <a href="{{ url_for('register') }}"
+               class="block w-full bg-white text-indigo-600 py-3 rounded-lg font-semibold text-center hover:bg-gray-100">
+                Start Free Trial
+            </a>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="bg-white rounded-xl card-shadow p-8">
+            <h3 class="text-2xl font-bold mb-4">Enterprise</h3>
+            <div class="text-4xl font-bold text-gray-900 mb-2">Custom</div>
+            <div class="text-gray-500 mb-6">Contact for pricing</div>
+            <ul class="space-y-3 mb-8">
+                <li class="flex items-center">
+                    <span class="text-green-500 mr-2">✓</span>
+                    Everything in Pro
+                </li>
+                <li class="flex items-center">
+                    <span class="text-green-500 mr-2">✓</span>
+                    White-label solution
+                </li>
+                <li class="flex items-center">
+                    <span class="text-green-500 mr-2">✓</span>
+                    Custom integrations
+                </li>
+                <li class="flex items-center">
+                    <span class="text-green-500 mr-2">✓</span>
+                    Dedicated support
+                </li>
+                <li class="flex items-center">
+                    <span class="text-green-500 mr-2">✓</span>
+                    SLA guarantee
+                </li>
+            </ul>
+            <button class="block w-full bg-gray-100 text-gray-800 py-3 rounded-lg font-semibold text-center hover:bg-gray-200"
+                    onclick="alert('Contact sales@leadfinder.com')">
+                Contact Sales
+            </button>
+        </div>
+    </div>
+
+    <!-- Cost Calculator -->
+    <div class="bg-gray-50 rounded-xl p-8 max-w-3xl mx-auto">
+        <h2 class="text-2xl font-bold mb-6 text-center">Cost Calculator</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Websites per search
+                </label>
+                <input type="number" id="calc_websites" value="10" min="1" max="1000"
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg"
+                       onchange="calculateTotal()">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Searches per month
+                </label>
+                <input type="number" id="calc_searches" value="10" min="1" max="1000"
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg"
+                       onchange="calculateTotal()">
+            </div>
+        </div>
+
+        <div class="mt-6 bg-white p-6 rounded-lg">
+            <div class="flex justify-between items-center">
+                <span class="text-lg text-gray-700">Estimated Monthly Cost:</span>
+                <span id="monthly_cost" class="text-3xl font-bold text-indigo-600">$5.00</span>
+            </div>
+            <div class="flex justify-between items-center mt-2 text-sm text-gray-500">
+                <span>Total websites analyzed:</span>
+                <span id="total_websites">100</span>
+            </div>
+            <div class="flex justify-between items-center mt-1 text-sm text-gray-500">
+                <span>Estimated leads found (~30%):</span>
+                <span id="estimated_leads">30</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="mt-16 max-w-3xl mx-auto">
+        <h2 class="text-2xl font-bold text-center mb-8">Frequently Asked Questions</h2>
+
+        <div class="space-y-6">
+            <div class="bg-white rounded-lg p-6 card-shadow">
+                <h3 class="font-bold mb-2">How does billing work?</h3>
+                <p class="text-gray-600">
+                    You're charged per website analyzed. Set up your payment method and we'll charge monthly
+                    based on your usage. No upfront costs or long-term contracts.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-lg p-6 card-shadow">
+                <h3 class="font-bold mb-2">What's included in the cost?</h3>
+                <p class="text-gray-600">
+                    Each website analyzed includes: Google search (with IP rotation), website loading,
+                    AI analysis for chatbox detection, business classification, and recommendations.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-lg p-6 card-shadow">
+                <h3 class="font-bold mb-2">Can I try it for free?</h3>
+                <p class="text-gray-600">
+                    Yes! New accounts get $5 in free credits - enough to analyze 100+ websites.
+                    No credit card required for signup.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-lg p-6 card-shadow">
+                <h3 class="font-bold mb-2">What if I need more features?</h3>
+                <p class="text-gray-600">
+                    Contact us for enterprise solutions including white-labeling, custom integrations,
+                    higher volume discounts, and dedicated support.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function calculateTotal() {
+    const websites = parseInt(document.getElementById('calc_websites').value) || 10;
+    const searches = parseInt(document.getElementById('calc_searches').value) || 10;
+
+    const totalWebsites = websites * searches;
+    const costPerSite = 0.05; // Average cost
+    const monthlyCost = totalWebsites * costPerSite;
+    const estimatedLeads = Math.round(totalWebsites * 0.3); // 30% conversion
+
+    document.getElementById('monthly_cost').textContent = '$' + monthlyCost.toFixed(2);
+    document.getElementById('total_websites').textContent = totalWebsites;
+    document.getElementById('estimated_leads').textContent = estimatedLeads;
+}
+
+// Initialize
+calculateTotal();
+</script>
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="gradient-bg">
+    <div class="max-w-7xl mx-auto py-20 px-4 sm:px-6 lg:px-8 text-center text-white">
+        <h1 class="text-5xl font-extrabold mb-6">
+            Find Businesses Without Chat Support
+        </h1>
+        <p class="text-xl mb-8 opacity-90 max-w-3xl mx-auto">
+            Automatically search Google, analyze websites, and generate qualified leads
+            for businesses that need better customer support tools.
+        </p>
+        <div class="space-x-4">
+            <a href="{{ url_for('register') }}"
+               class="bg-white text-indigo-600 px-8 py-3 rounded-lg font-semibold text-lg hover:bg-gray-100 transition">
+                Start Free Trial
+            </a>
+            <a href="{{ url_for('login') }}"
+               class="bg-transparent border-2 border-white px-8 py-3 rounded-lg font-semibold text-lg hover:bg-white hover:text-indigo-600 transition">
+                Login
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Features -->
+<div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl font-bold text-center mb-12">How It Works</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Feature 1 -->
+        <div class="bg-white p-8 rounded-xl card-shadow text-center">
+            <div class="text-5xl mb-4">🔍</div>
+            <h3 class="text-xl font-bold mb-3">Search Google</h3>
+            <p class="text-gray-600">
+                Enter your target industry and location. Our AI safely searches Google
+                with IP rotation to avoid blocks.
+            </p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="bg-white p-8 rounded-xl card-shadow text-center">
+            <div class="text-5xl mb-4">🤖</div>
+            <h3 class="text-xl font-bold mb-3">AI Analysis</h3>
+            <p class="text-gray-600">
+                Advanced AI checks each website for chatboxes, WhatsApp buttons,
+                and call widgets with high accuracy.
+            </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="bg-white p-8 rounded-xl card-shadow text-center">
+            <div class="text-5xl mb-4">📊</div>
+            <h3 class="text-xl font-bold mb-3">Get Qualified Leads</h3>
+            <p class="text-gray-600">
+                Export businesses that need support tools with AI recommendations
+                and priority rankings.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Pricing Preview -->
+<div class="bg-gray-100 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl font-bold mb-4">Simple, Transparent Pricing</h2>
+        <p class="text-gray-600 mb-8">Pay only for what you use. No hidden fees.</p>
+
+        <div class="bg-white rounded-xl p-8 max-w-md mx-auto card-shadow">
+            <div class="text-4xl font-bold text-indigo-600 mb-2">$0.05</div>
+            <div class="text-gray-500 mb-6">per website analyzed</div>
+            <ul class="text-left space-y-3">
+                <li class="flex items-center">
+                    <span class="text-green-500 mr-2">✓</span>
+                    AI-powered chatbox detection
+                </li>
+                <li class="flex items-center">
+                    <span class="text-green-500 mr-2">✓</span>
+                    Business analysis & recommendations
+                </li>
+                <li class="flex items-center">
+                    <span class="text-green-500 mr-2">✓</span>
+                    CSV & Sheets export
+                </li>
+                <li class="flex items-center">
+                    <span class="text-green-500 mr-2">✓</span>
+                    IP rotation included
+                </li>
+            </ul>
+            <a href="{{ url_for('register') }}"
+               class="mt-6 block w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition">
+                Start Free Trial
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- CTA -->
+<div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8 text-center">
+    <h2 class="text-3xl font-bold mb-4">Ready to Find Leads?</h2>
+    <p class="text-gray-600 mb-8">Start your free trial today. No credit card required.</p>
+    <a href="{{ url_for('register') }}"
+       class="bg-indigo-600 text-white px-10 py-4 rounded-lg font-semibold text-lg hover:bg-indigo-700 transition">
+        Get Started Free
+    </a>
+</div>
+{% endblock %}

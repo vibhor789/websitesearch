@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+        <p class="text-gray-600 mt-2">Welcome back, {{ current_user.name }}!</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-xl card-shadow">
+            <div class="text-sm font-medium text-gray-500">Total Searches</div>
+            <div class="text-3xl font-bold text-indigo-600 mt-2">{{ total_searches }}</div>
+        </div>
+        <div class="bg-white p-6 rounded-xl card-shadow">
+            <div class="text-sm font-medium text-gray-500">Leads Found</div>
+            <div class="text-3xl font-bold text-green-600 mt-2">{{ total_leads }}</div>
+        </div>
+        <div class="bg-white p-6 rounded-xl card-shadow">
+            <div class="text-sm font-medium text-gray-500">Total Spent</div>
+            <div class="text-3xl font-bold text-gray-900 mt-2">${{ "%.2f"|format(total_cost) }}</div>
+        </div>
+        <div class="bg-white p-6 rounded-xl card-shadow">
+            <div class="text-sm font-medium text-gray-500">Cost Per Lead</div>
+            <div class="text-3xl font-bold text-gray-900 mt-2">
+                {% if total_leads > 0 %}
+                    ${{ "%.2f"|format(total_cost / total_leads) }}
+                {% else %}
+                    $0.00
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Action -->
+    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-8 mb-8 text-white">
+        <h2 class="text-2xl font-bold mb-2">Ready to find more leads?</h2>
+        <p class="opacity-90 mb-4">Start a new search and discover businesses that need your solutions.</p>
+        <a href="{{ url_for('new_search') }}"
+           class="inline-block bg-white text-indigo-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+            🔍 Start New Search
+        </a>
+    </div>
+
+    <!-- Recent Searches -->
+    <div class="bg-white rounded-xl card-shadow">
+        <div class="px-6 py-4 border-b">
+            <h2 class="text-xl font-bold">Recent Searches</h2>
+        </div>
+
+        {% if searches %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Query</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Leads</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cost</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for search in searches %}
+                    <tr>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="font-medium text-gray-900">{{ search.query }}</div>
+                            <div class="text-sm text-gray-500">{{ search.max_results }} sites</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                {% if search.status == 'completed' %}bg-green-100 text-green-800
+                                {% elif search.status == 'running' %}bg-yellow-100 text-yellow-800
+                                {% elif search.status == 'failed' %}bg-red-100 text-red-800
+                                {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                {{ search.status }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ search.leads_found }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            ${{ "%.2f"|format(search.actual_cost) }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ search.created_at.strftime('%Y-%m-%d %H:%M') }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <a href="{{ url_for('search_detail', search_id=search.id) }}"
+                               class="text-indigo-600 hover:text-indigo-900 mr-4">View</a>
+                            <a href="{{ url_for('export_search', search_id=search.id) }}"
+                               class="text-green-600 hover:text-green-900">Export</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="p-8 text-center">
+            <div class="text-gray-400 text-5xl mb-4">🔍</div>
+            <h3 class="text-lg font-medium text-gray-900 mb-2">No searches yet</h3>
+            <p class="text-gray-500 mb-4">Start your first search to find qualified leads.</p>
+            <a href="{{ url_for('new_search') }}"
+               class="inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-indigo-700">
+                Start Your First Search
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
