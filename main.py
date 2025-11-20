@@ -13,7 +13,10 @@ from colorama import Fore, Style, init as colorama_init
 from tqdm import tqdm
 
 from config import Config
-from google_searcher import GoogleSearcher
+try:
+    from google_searcher_improved import GoogleSearcherImproved as GoogleSearcher
+except ImportError:
+    from google_searcher import GoogleSearcher
 from chatbox_detector import ChatboxDetector
 from business_analyzer import BusinessAnalyzer
 from sheets_manager import SheetsManager
