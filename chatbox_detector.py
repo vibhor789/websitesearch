@@ -6,6 +6,12 @@ from playwright.sync_api import sync_playwright, Page, TimeoutError as Playwrigh
 from config import Config
 import os
 
+try:
+    from contact_scraper import ContactScraper
+    CONTACT_SCRAPER_AVAILABLE = True
+except ImportError:
+    CONTACT_SCRAPER_AVAILABLE = False
+
 logger = logging.getLogger(__name__)
 
 class ChatboxDetector:
@@ -54,10 +60,12 @@ class ChatboxDetector:
             logger.warning(f"Failed to initialize AI client: {e}")
             self.use_ai = False
 
-    def analyze_website(self, url: str) -> Dict:
+    def analyze_website(self, url: str, collect_contacts: bool = True) -> Dict:
         """
         Analyze a website for chatboxes and support widgets.
-        Returns detection results with confidence scores.
+        Optionally collect contact information.
+
+        Returns detection results with confidence scores and contact info.
         """
         logger.info(f"Analyzing: {url}")
 
@@ -69,7 +77,8 @@ class ChatboxDetector:
             'detected_widgets': [],
             'confidence': 0.0,
             'screenshot_path': None,
-            'error': None
+            'error': None,
+            'contact_info': {}
         }
 
         try:
@@ -111,6 +120,17 @@ class ChatboxDetector:
                     ai_analysis = self._analyze_with_ai(screenshot_path)
                     # Combine HTML and AI analysis
                     result = self._combine_analyses(result, ai_analysis)
+
+                # Extract contact information if requested
+                if collect_contacts and CONTACT_SCRAPER_AVAILABLE:
+                    try:
+                        scraper = ContactScraper()
+                        contact_data = scraper.extract_from_page(page, url)
+                        result['contact_info'] = contact_data
+                        logger.info(f"Collected {len(contact_data.get('emails', []))} emails, "
+                                  f"{len(contact_data.get('phones', []))} phones")
+                    except Exception as e:
+                        logger.warning(f"Could not extract contacts: {e}")
 
                 browser.close()
 

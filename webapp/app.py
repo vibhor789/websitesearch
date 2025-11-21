@@ -63,6 +63,10 @@ class Search(db.Model):
     leads_found = db.Column(db.Integer, default=0)
     estimated_cost = db.Column(db.Float, default=0.0)
     actual_cost = db.Column(db.Float, default=0.0)
+    # Search criteria - what features must be missing
+    missing_chatbox = db.Column(db.Boolean, default=True)
+    missing_whatsapp = db.Column(db.Boolean, default=True)
+    missing_call_button = db.Column(db.Boolean, default=True)
     results = db.relationship('Lead', backref='search', lazy=True)
 
 class Lead(db.Model):
@@ -82,6 +86,14 @@ class Lead(db.Model):
     recommendations = db.Column(db.Text)
     potential_impact = db.Column(db.Text)
     screenshot_path = db.Column(db.String(500))
+    # Contact information
+    emails = db.Column(db.Text)  # Comma-separated emails
+    phones = db.Column(db.Text)  # Comma-separated phones
+    contact_name = db.Column(db.String(200))
+    linkedin = db.Column(db.String(500))
+    facebook = db.Column(db.String(500))
+    twitter = db.Column(db.String(500))
+    instagram = db.Column(db.String(500))
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 @login_manager.user_loader
@@ -171,6 +183,11 @@ def new_search():
         screenshots_enabled = request.form.get('screenshots_enabled') == 'on'
         ai_provider = request.form.get('ai_provider', 'openai')
 
+        # Capture search criteria
+        missing_chatbox = request.form.get('missing_chatbox') == 'true'
+        missing_whatsapp = request.form.get('missing_whatsapp') == 'true'
+        missing_call_button = request.form.get('missing_call_button') == 'true'
+
         # Check if user has API keys configured
         if ai_provider == 'openai' and not current_user.openai_api_key:
             flash('Please configure your OpenAI API key in Settings first', 'error')
@@ -192,7 +209,10 @@ def new_search():
             screenshots_enabled=screenshots_enabled,
             ai_provider=ai_provider,
             status='pending',
-            estimated_cost=estimated_cost
+            estimated_cost=estimated_cost,
+            missing_chatbox=missing_chatbox,
+            missing_whatsapp=missing_whatsapp,
+            missing_call_button=missing_call_button
         )
         db.session.add(new_search)
         db.session.commit()
@@ -241,6 +261,8 @@ def export_search(search_id):
         'Domain', 'URL', 'Business Type', 'Description',
         'Has Chatbox', 'Has WhatsApp', 'Has Call Button',
         'Missing Features', 'Recommended Features', 'Priority',
+        'Emails', 'Phones', 'Contact Name',
+        'LinkedIn', 'Facebook', 'Twitter', 'Instagram',
         'Recommendations', 'Potential Impact'
     ])
 
@@ -252,6 +274,8 @@ def export_search(search_id):
             'Yes' if lead.has_whatsapp else 'No',
             'Yes' if lead.has_call_button else 'No',
             lead.missing_features, lead.recommended_features, lead.priority,
+            lead.emails or '', lead.phones or '', lead.contact_name or '',
+            lead.linkedin or '', lead.facebook or '', lead.twitter or '', lead.instagram or '',
             lead.recommendations, lead.potential_impact
         ])
 
